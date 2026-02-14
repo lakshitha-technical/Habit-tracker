@@ -1,10 +1,12 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { useDay } from '../hooks/useDay'
 import { useHabits } from '../hooks/useHabits'
 import * as daysApi from '../api/days'
+import * as habitsApi from '../api/habits'
 import DayTypeSelect from '../components/DayTypeSelect'
 import ScreenTimeInput from '../components/ScreenTimeInput'
 import HabitList from '../components/HabitList'
+import AddHabitForm from '../components/AddHabitForm'
 
 const TODAY = new Date().toISOString().slice(0, 10)
 
@@ -31,7 +33,9 @@ function buildHabitsPayload(habits, dailyHabits) {
 
 export default function Today() {
   const { day, loading, error, reload } = useDay(TODAY)
-  const { habits, loading: habitsLoading } = useHabits()
+  const { habits, loading: habitsLoading, reload: reloadHabits } = useHabits()
+  const [showAddHabit, setShowAddHabit] = useState(false)
+  const [habitError, setHabitError] = useState(null)
 
   const habitsToShow = useMemo(
     () => habitsForDayType(habits, day?.dayType ?? 'WEEKDAY'),
@@ -92,6 +96,20 @@ export default function Today() {
     [day?.dailyHabits, habitsToShow, reload]
   )
 
+  const handleAddHabit = useCallback(
+    async (body) => {
+      setHabitError(null)
+      try {
+        await habitsApi.createHabit(body)
+        reloadHabits()
+        setShowAddHabit(false)
+      } catch (e) {
+        setHabitError(e.message || 'Failed to add habit')
+      }
+    },
+    [reloadHabits]
+  )
+
   if (loading || habitsLoading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
@@ -150,9 +168,28 @@ export default function Today() {
       </section>
 
       <section>
-        <h2 className="text-sm font-medium text-gray-700 mb-3">Habits</h2>
-        {habitsToShow.length === 0 ? (
-          <p className="text-gray-500 py-4">No habits for this day type.</p>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-medium text-gray-700">Habits</h2>
+          <button
+            type="button"
+            onClick={() => { setShowAddHabit((v) => !v); setHabitError(null); }}
+            className="text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg"
+          >
+            {showAddHabit ? 'Done' : '+ Add habit'}
+          </button>
+        </div>
+        {showAddHabit && (
+          <div className="mb-4">
+            {habitError && (
+              <p className="text-red-600 text-sm mb-2">{habitError}</p>
+            )}
+            <AddHabitForm onSubmit={handleAddHabit} />
+          </div>
+        )}
+        {habits.length === 0 && !showAddHabit ? (
+          <p className="text-gray-500 py-4">No habits yet. Tap &quot;+ Add habit&quot; to create one.</p>
+        ) : habitsToShow.length === 0 ? (
+          <p className="text-gray-500 py-4">No habits for this day type. Add one with &quot;Weekdays only&quot; or &quot;Weekends only&quot; if needed.</p>
         ) : (
           <HabitList
             habits={habitsToShow}

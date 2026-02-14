@@ -23,7 +23,7 @@ public class Expense {
     private BigDecimal amount;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "expense_category_enum")
     private ExpenseCategory category;
 
     private String description;

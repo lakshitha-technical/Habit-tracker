@@ -9,6 +9,8 @@ export default function Layout({ children }) {
         <NavLink to="/" active={path === '/'}>Today</NavLink>
         <NavLink to="/expenses" active={path === '/expenses'}>Expenses</NavLink>
         <NavLink to="/month" active={path === '/month'}>Month</NavLink>
+        <NavLink to="/habits" active={path === '/habits'}>Habits</NavLink>
+        <NavLink to="/motivation" active={path === '/motivation'}>Motivation</NavLink>
       </nav>
     </div>
   )

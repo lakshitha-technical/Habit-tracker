@@ -21,7 +21,7 @@ public class DayEntry {
     private LocalDate date;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "day_type", nullable = false)
+    @Column(name = "day_type", nullable = false, columnDefinition = "day_type_enum")
     private DayType dayType;
 
     @Column(name = "screen_time_minutes")

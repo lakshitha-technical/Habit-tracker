@@ -12,6 +12,7 @@ import app.tracker.enums.HabitScope;
 import app.tracker.repository.DailyHabitRepository;
 import app.tracker.repository.DayEntryRepository;
 import app.tracker.repository.HabitRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +48,16 @@ public class DayEntryService {
 
     @Transactional
     public DayEntryResponseDto getOrCreateDay(LocalDate date) {
-        DayEntry entry = dayEntryRepository.findByDate(date)
-            .orElseGet(() -> createDayEntry(date));
-        return toResponse(entry);
+        try {
+            DayEntry entry = dayEntryRepository.findByDate(date)
+                .orElseGet(() -> createDayEntry(date));
+            return toResponse(entry);
+        } catch (DataIntegrityViolationException e) {
+            // Handle race condition - another thread created the record
+            DayEntry entry = dayEntryRepository.findByDate(date)
+                .orElseThrow(() -> new RuntimeException("Failed to create or find day entry"));
+            return toResponse(entry);
+        }
     }
 
     @Transactional

@@ -26,7 +26,7 @@ public class Habit {
     private Boolean isNegative = false;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "applies_to", nullable = false)
+    @Column(name = "applies_to", nullable = false, columnDefinition = "habit_scope_enum")
     private HabitScope appliesTo = HabitScope.BOTH;
 
     @Column(name = "created_at", nullable = false, updatable = false)
