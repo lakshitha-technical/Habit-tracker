@@ -2,7 +2,7 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "./gradlew bootRun"
+startCommand = "gradle bootRun"
 healthcheckPath = "/actuator/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
@@ -16,6 +16,7 @@ DATABASE_URL = "${postgresql.DATABASE_URL}"
 DATABASE_USERNAME = "${postgresql.USERNAME}"
 DATABASE_PASSWORD = "${postgresql.PASSWORD}"
 PORT = "8080"
+SPRING_PROFILES_ACTIVE = "railway"
 
 [[services]]
 name = "habit-tracker-frontend"
