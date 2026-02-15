@@ -1,4 +1,6 @@
-const BASE = '/api'
+const BASE = import.meta.env.PROD 
+  ? '/api'
+  : 'http://localhost:8080/api'
 
 export async function get(url) {
   const r = await fetch(BASE + url)

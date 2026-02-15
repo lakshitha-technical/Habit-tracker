@@ -16,3 +16,9 @@ DATABASE_URL = "${postgresql.DATABASE_URL}"
 DATABASE_USERNAME = "${postgresql.USERNAME}"
 DATABASE_PASSWORD = "${postgresql.PASSWORD}"
 PORT = "8080"
+
+[[services]]
+name = "habit-tracker-frontend"
+source_dir = "frontend/dist"
+healthcheckPath = "/"
+healthcheckTimeout = 30
