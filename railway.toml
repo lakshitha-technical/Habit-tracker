@@ -12,7 +12,7 @@ restartPolicyMaxRetries = 10
 name = "habit-tracker-api"
 
 [services.variables]
-DATABASE_URL = "postgresql://postgres:BVfnLaoReUAtDINdWdtrvirdSqCGFiYq@trolley.proxy.rlwy.net:31665/railway"
+DATABASE_URL = "postgresql://postgres:BVfnLaoReUAtDINdWdtrvirdSqCGFiYq@containers-us-west-1.railway.app:5432/railway"
 DATABASE_USERNAME = "postgres"
 DATABASE_PASSWORD = "BVfnLaoReUAtDINdWdtrvirdSqCGFiYq"
 PORT = "8080"
